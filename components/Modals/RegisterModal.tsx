@@ -1,8 +1,13 @@
-import useRegisterModal from "@/hooks/useRegisterModals";
+import axios from "axios";
 import { useCallback, useState } from "react";
+import { toast } from 'react-hot-toast';
+import { signIn } from "next-auth/react";
+
+import useRegisterModal from "@/hooks/useRegisterModals";
+import useLoginModal from "@/hooks/useLoginModals";
+
 import Input from "../Input";
 import Modal from "../Modal";
-import useLoginModal from "@/hooks/useLoginModals";
 
 const RegisterModal = () => {
     const LoginModal = useLoginModal();
@@ -18,16 +23,29 @@ const RegisterModal = () => {
         try {
             setIsLoading(true);
 
-            // TODO ADD REGISTER AND LOG IN
+            await axios.post('/api/register', {
+                email,
+                password,
+                username,
+                name
+            });
+
+            toast.success('Account Created.');
+
+            signIn('credentials', {
+                email,
+                password
+            });
 
             registerModal.onClose();
         } catch (error) {
             console.log(error)
+            toast.error("Something went wrong");
         } finally {
             setIsLoading(false);
         }
 
-    }, [registerModal]);
+    }, [registerModal, email, password, username, name]);
 
     const onToggle = useCallback(() => {
         if (isLoading) {
