@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from 'react-hot-toast';
 import { signIn } from "next-auth/react";
 
@@ -46,6 +46,18 @@ const RegisterModal = () => {
         }
 
     }, [registerModal, email, password, username, name]);
+
+    // If the user hit the escape key, we close the modal
+    useEffect(() => {
+        const down = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                registerModal.onClose();
+            }
+        }
+
+        document.addEventListener("keydown", down);
+        return () => document.removeEventListener("keydown", down);
+    }, [registerModal]);
 
     const onToggle = useCallback(() => {
         if (isLoading) {

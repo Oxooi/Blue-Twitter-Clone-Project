@@ -1,5 +1,5 @@
 import useLoginModal from "@/hooks/useLoginModals";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Input from "../Input";
 import Modal from "../Modal";
 import useRegisterModal from "@/hooks/useRegisterModals";
@@ -14,6 +14,8 @@ const LoginModal = () => {
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
+
+    // When the user submit the form, we try to login
     const onSubmit = useCallback(async () => {
         try {
             setIsLoading(true);
@@ -22,7 +24,7 @@ const LoginModal = () => {
                 email,
                 password
             })
-            
+
             LoginModal.onClose();
         } catch (error) {
             console.log(error)
@@ -32,6 +34,31 @@ const LoginModal = () => {
 
     }, [LoginModal, email, password]);
 
+    // If the user hit the enter key, we submit the form
+    useEffect(() => {
+        const down = (e: KeyboardEvent) => {
+            if (e.key === "Enter") {
+                onSubmit();
+            }
+        }
+
+        document.addEventListener("keydown", down);
+        return () => document.removeEventListener("keydown", down);
+    }, [onSubmit]);
+
+    // If the user hit the escape key, we close the modal
+    useEffect(() => {
+        const down = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                LoginModal.onClose();
+            }
+        }
+
+        document.addEventListener("keydown", down);
+        return () => document.removeEventListener("keydown", down);
+    }, [LoginModal]);
+
+    // When the user click on the "Create an account" link, we close the login modal and open the register modal
     const onToggle = useCallback(() => {
         if (isLoading) {
             return;
