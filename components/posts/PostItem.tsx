@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
 import { AiFillHeart, AiOutlineHeart, AiOutlineMessage } from 'react-icons/ai';
+import { PiShareFat, PiShareFatFill, PiBookmarkSimple, PiBookmarkSimpleFill } from "react-icons/pi";
 import { formatDistanceToNowStrict } from 'date-fns';
 
 import useLoginModal from '@/hooks/useLoginModals';
@@ -18,7 +19,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
   const loginModal = useLoginModal();
 
   const { data: currentUser } = useCurrentUser();
-  const { hasLiked, toggleLike } = useLike({ postId: data.id, userId});
+  const { hasLiked, toggleLike } = useLike({ postId: data.id, userId });
 
   const goToUser = useCallback((ev: any) => {
     ev.stopPropagation();
@@ -50,7 +51,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
   }, [data.createdAt])
 
   return (
-    <div 
+    <div
       onClick={goToPost}
       className="
         border-b-[1px] 
@@ -64,8 +65,8 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
         <Avatar userId={data.user.id} />
         <div>
           <div className="flex flex-row items-center gap-2">
-            <p 
-              onClick={goToUser} 
+            <p
+              onClick={goToUser}
               className="
                 text-white 
                 font-semibold 
@@ -74,8 +75,8 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
             ">
               {data.user.name}
             </p>
-            <span 
-              onClick={goToUser} 
+            <span
+              onClick={goToUser}
               className="
                 text-neutral-500
                 cursor-pointer
@@ -92,18 +93,9 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
           <div className="text-white mt-1">
             {data.body}
           </div>
-          <div className="flex flex-row items-center mt-3 gap-10">
-            <div 
-              className="
-                flex 
-                flex-row 
-                items-center 
-                text-neutral-500 
-                gap-2 
-                cursor-pointer 
-                transition 
-                hover:text-sky-500
-            ">
+          <div className="flex flex-row items-center mt-3 gap-20">
+            <div
+              className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-sky-500">
               <AiOutlineMessage size={20} />
               <p>
                 {data.comments?.length || 0}
@@ -111,20 +103,19 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
             </div>
             <div
               onClick={onLike}
-              className="
-                flex 
-                flex-row 
-                items-center 
-                text-neutral-500 
-                gap-2 
-                cursor-pointer 
-                transition 
-                hover:text-red-500
-            ">
+              className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-red-500">
               <LikeIcon color={hasLiked ? 'red' : ''} size={20} />
               <p>
                 {data.likedIds.length}
               </p>
+            </div>
+            <div
+              className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-emerald-500">
+              <PiShareFat size={20} />
+            </div>
+            <div
+              className="flex flex-row items-center text-neutral-500 gap-2 cursor-pointer transition hover:text-slate-200">
+              <PiBookmarkSimple size={20} />
             </div>
           </div>
         </div>

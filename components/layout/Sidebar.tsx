@@ -8,6 +8,7 @@ import useCurrentUser from "@/hooks/useCurrentUser";
 import SideBarLogo from "./SidebarLogo";
 import SidebarItem from "./SidebarItem";
 import SidebarTweetButton from "./SidebarTweetButton";
+import UserLogo from "./UserLogo";
 
 const Sidebar = () => {
     const { data: currentUser } = useCurrentUser();
@@ -32,7 +33,7 @@ const Sidebar = () => {
     ];
 
     return (
-        <div className="col-span-1 h-full pr-4 md:pr-6">
+        <div className="col-span-1 h-full pr-4 md:pr-6 flex flex-col justify-between">
             <div className="flex flex-col items-end">
                 <div className="space-y-2 lg:w-[230px]">
                     <SideBarLogo />
@@ -51,6 +52,9 @@ const Sidebar = () => {
                     <SidebarTweetButton />
                 </div>
             </div>
+            {currentUser && (
+                <UserLogo userId={currentUser?.id} />
+            )}
         </div>
     );
 }
