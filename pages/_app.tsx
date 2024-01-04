@@ -3,14 +3,17 @@ import { Toaster } from 'react-hot-toast'
 import { SessionProvider } from 'next-auth/react'
 
 import Layout from '@/components/layout'
-import LoginModal from '@/components/modals/LoginModal'
-import RegisterModal from '@/components/modals/RegisterModal'
+import LoginModal from '@/components/Modals/LoginModal'
+import RegisterModal from '@/components/Modals/RegisterModal'
+import EditModal from '@/components/Modals/EditModal'
+
 import '@/styles/globals.css'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider session={pageProps.session}>
-      <Toaster/>
+      <Toaster />
+      <EditModal />
       <RegisterModal />
       <LoginModal />
       <Layout>
