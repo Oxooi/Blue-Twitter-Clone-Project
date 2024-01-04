@@ -76,16 +76,6 @@ const Form: React.FC<FormPropos> = ({
 
                             placeholder={placeholder}
                         ></textarea>
-                        <hr
-                            className="
-                            opacity-0
-                            peer-focus:opacity-100
-                            h-[1px]
-                            w-full
-                            border-neutral-800
-                            transition
-                        "
-                        />
                         <div className="mt-4 flex flex-row justify-end">
                             <Button
                                 disabled={isLoading || !body}
