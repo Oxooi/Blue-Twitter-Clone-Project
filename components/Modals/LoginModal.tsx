@@ -36,27 +36,16 @@ const LoginModal = () => {
 
     // If the user hit the enter key, we submit the form
     useEffect(() => {
-        const down = (e: KeyboardEvent) => {
-            if (e.key === "Enter") {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Enter" && LoginModal.isOpen) {
                 onSubmit();
             }
-        }
+        };
 
-        document.addEventListener("keydown", down);
-        return () => document.removeEventListener("keydown", down);
-    }, [onSubmit]);
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [onSubmit, LoginModal.isOpen]);
 
-    // If the user hit the escape key, we close the modal
-    useEffect(() => {
-        const down = (e: KeyboardEvent) => {
-            if (e.key === "Escape") {
-                LoginModal.onClose();
-            }
-        }
-
-        document.addEventListener("keydown", down);
-        return () => document.removeEventListener("keydown", down);
-    }, [LoginModal]);
 
     // When the user click on the "Create an account" link, we close the login modal and open the register modal
     const onToggle = useCallback(() => {

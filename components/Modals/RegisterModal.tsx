@@ -47,6 +47,20 @@ const RegisterModal = () => {
 
     }, [registerModal, email, password, username, name]);
 
+
+    // If the user hit the enter key, we submit the form
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Enter" && registerModal.isOpen) {
+                onSubmit();
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [onSubmit, registerModal.isOpen]);
+
+
     // If the user hit the escape key, we close the modal
     useEffect(() => {
         const down = (e: KeyboardEvent) => {
