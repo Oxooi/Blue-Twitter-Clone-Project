@@ -1,5 +1,7 @@
-import useUser from "@/hooks/useUser";
 import { useRouter } from "next/navigation";
+import { HiDotsHorizontal } from "react-icons/hi";
+
+import useUser from "@/hooks/useUser";
 import Avatar from "../Avatar";
 
 interface UserLogoProps {
@@ -18,13 +20,16 @@ const UserLogo: React.FC<UserLogoProps> = ({ userId }) => {
                 <div className="h-14 w-14 rounded-full">
                     <Avatar userId={userId} />
                 </div>
-                <div className="flex-col justify-center hidden lg:block">
+                <div className="flex-grow flex-col justify-center hidden lg:flex">
                     <p className='text-white font-semibold'>
                         {fetchedUser?.name}
                     </p>
                     <p className="text-neutral-500">
                         @{fetchedUser?.username}
                     </p>
+                </div>
+                <div className="items-center justify-end pl-6 hidden lg:flex text-neutral-500">
+                    <HiDotsHorizontal />
                 </div>
             </div>
         </div>
