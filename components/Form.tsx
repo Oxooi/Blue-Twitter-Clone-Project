@@ -48,7 +48,7 @@ const Form: React.FC<FormPropos> = ({
     }, [body, mutatePosts]);
 
 
-    // If the user hit the enter key, we submit the form
+    // If the user hit the enter + ctrl key , we submit the form
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "Enter" && e.ctrlKey && body) {
