@@ -2,7 +2,9 @@ interface ButtonProps {
     label: string;
     secondary?: boolean;
     fullWidth?: boolean;
+    thin?: boolean;
     large?: boolean;
+    small?: boolean;
     onClick: () => void;
     disabled?: boolean;
     outline?: boolean;
@@ -12,7 +14,9 @@ const Button: React.FC<ButtonProps> = ({
     label,
     secondary,
     fullWidth,
+    thin,
     large,
+    small,
     onClick,
     disabled,
     outline
@@ -36,6 +40,10 @@ const Button: React.FC<ButtonProps> = ({
                 ${large ? 'text-xl' : 'text-md'}
                 ${large ? 'px-5' : 'px-4'}
                 ${large ? 'py-3' : 'py-2'}
+                ${thin ? 'text-sm' : ''}
+                ${thin ? 'px-1' : 'px-2'}
+                ${thin ? 'py-1' : 'py-2'}
+                ${small ? 'px-5' : 'px-9'}
                 ${outline ? 'bg-transparent' : ''}
                 ${outline ? 'border-white' : ''}
                 ${outline ? 'text-white' : ''}

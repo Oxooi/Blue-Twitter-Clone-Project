@@ -13,10 +13,8 @@ const UserLogo: React.FC<UserLogoProps> = ({ userId }) => {
     const router = useRouter();
     return (
         <div className="flex lg:justify-start sm:justify-start md:justify-end rounded-full">
-            <div
-                onClick={() => router.push(`/users/${userId}`)}
-                className="flex items-center space-x-2 mb-[15px] ml-6 mt-6 hover:bg-slate-300 lg:p-4 hover:bg-opacity-10 cursor-pointer transition rounded-full"
-            >
+            <div onClick={() => router.push(`/users/${userId}`)}
+                className="flex items-center space-x-2 mb-[15px] ml-6 mt-6 hover:bg-slate-300 lg:p-4 hover:bg-opacity-10 cursor-pointer transition rounded-full">
                 <div className="h-14 w-14 rounded-full">
                     <Avatar userId={userId} />
                 </div>
