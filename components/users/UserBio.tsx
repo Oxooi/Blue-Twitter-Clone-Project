@@ -52,7 +52,7 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
                         {fetchedUser?.bio === "" || fetchedUser?.bio === null ? ("🚀 Exploring Blue's digital world! Here to connect 🤝, share 📢, and discover 🔍. Let's shape Blue together! [Default Blue Bio] 🌐") : (fetchedUser?.bio)}
                     </p>
                     <div className='flex flex-row items-center gap-2 mt-4 text-neutral-500'>
-                        <BiCalendar size={24} />
+                        <BiCalendar size={20} />
                         <p>
                             Joined {createdAt}
                         </p>
@@ -60,15 +60,9 @@ const UserBio: React.FC<UserBioProps> = ({ userId }) => {
                 </div>
                 <div className='flex flext-row items-center mt-4 gap-6'>
                     <div className='flex flex-row items-center gap-1'>
-                        <p className='text-white'>
-                            {fetchedUser?.followingIds?.length}
-                        </p>
-                        <p className='text-neutral-500'>
-                            Following
-                        </p>
+                        <p className='text-white'> {fetchedUser?.followingIds?.length} </p>
+                        <p className='text-neutral-500'> Following </p>
                     </div>
-                </div>
-                <div className='flex flext-row items-center mt-4 gap-6'>
                     <div className='flex flex-row items-center gap-1'>
                         <p className="text-white">{fetchedUser?.followersCount || 0}</p>
                         <p className='text-neutral-500'>Followers</p>
