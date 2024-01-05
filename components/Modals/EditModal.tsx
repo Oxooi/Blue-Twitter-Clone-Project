@@ -8,6 +8,8 @@ import useUser from "@/hooks/useUser";
 import Modal from "../Modal";
 import Input from "../Input";
 import ImageUpload from "../ImageUpload";
+import Label from "../Label";
+import Header from "../Header";
 
 const EditModal = () => {
     const { data: currentUser } = useCurrentUser();
@@ -67,38 +69,81 @@ const EditModal = () => {
         }
     }, [bio, name, username, profileImage, coverImage, editModal, mutateFetchedUser]);
 
+    // If the user hit the escape key, we close the form
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                editModal.onClose();
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [editModal.onClose]);
+
+    // If the user hit the enter + ctrl key , we submit the form
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Enter" && e.ctrlKey) {
+                onSubmit();
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [onSubmit]);
+
+
     const bodyContent = (
         <div className="flex flex-col gap-4">
-            <ImageUpload 
-                value={profileImage}
-                disabled={isLoading}
-                onChange={(image) => setProfileImage(image)}
-                label="Upload profile image"
-            />
-            <ImageUpload 
+            {/* Header */}
+            <Header label="Edit Profil" />
+
+            {/* Cover Image */}
+            <Label label="Cover Image" />
+            <ImageUpload
                 value={coverImage}
                 disabled={isLoading}
                 onChange={(image) => setCoverImage(image)}
                 label="Upload cover image"
             />
+            {/* Profile Image */}
+            <Label label="Profile Image" />
+            <ImageUpload
+                value={profileImage}
+                disabled={isLoading}
+                onChange={(image) => setProfileImage(image)}
+                label="Upload profile image"
+            />
+            <hr
+                className="border-neutral-800"
+            />
+            {/* Email */}
+            <Label label="E-mail" />
             <Input
                 placeholder="Email"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
                 disabled={isLoading}
             />
+            {/* Name */}
+            <Label label="Name" />
             <Input
                 placeholder="Name"
                 onChange={(e) => setName(e.target.value)}
                 value={name}
                 disabled={isLoading}
             />
+            {/* Username */}
+            <Label label="Username" />
             <Input
                 placeholder="Username"
                 onChange={(e) => setUsername(e.target.value)}
                 value={username}
                 disabled={isLoading}
             />
+            {/* Bio */}
+            <Label label="Bio" />
             <Input
                 placeholder="Bio"
                 onChange={(e) => setBio(e.target.value)}
