@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
 import useCurrentUser from "@/hooks/useCurrentUser";
@@ -46,6 +46,19 @@ const Form: React.FC<FormPropos> = ({
             setIsLoading(false);
         }
     }, [body, mutatePosts]);
+
+
+    // If the user hit the enter key, we submit the form
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Enter" && e.ctrlKey) {
+                onSubmit();
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [onSubmit]);
 
 
     return (
