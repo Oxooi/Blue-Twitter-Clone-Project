@@ -16,6 +16,18 @@ export default async function handler(
         const { body } = req.body;
         const { postId } = req.query;
 
+        // get the username of the user who comment the post
+        const user = await prisma.user.findUnique({
+            where: {
+                id: currentUser.id
+            }
+        });
+
+        if (!user) {
+            throw new Error("Invalid user");
+        }
+
+
         if (!postId || typeof postId !== 'string') {
             throw new Error("Invalid ID");
 
@@ -28,6 +40,37 @@ export default async function handler(
                 postId
             }
         });
+
+        try {
+            const post = await prisma.post.findUnique({
+                where: {
+                    id: postId
+                }
+            });
+
+            if (post?.userId) {
+                await prisma.notification.create({
+                    data: {
+                        body: `${user.username} replied to your tweet`,
+                        userId: post.userId,
+                        type: 'comment',
+                        target: user.id,
+                        postUrl: post.id
+                    }
+                });
+
+                await prisma.user.update({
+                    where: {
+                        id: post.userId
+                    },
+                    data: {
+                        hasNotifications: true
+                    }
+                })
+            }
+        } catch (error) {
+            console.log(error);
+        }
 
         return res.status(200).json(comment);
 

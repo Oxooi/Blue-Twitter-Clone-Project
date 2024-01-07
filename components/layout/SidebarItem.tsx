@@ -1,9 +1,11 @@
 import { useRouter } from "next/router";
 import { useCallback } from "react";
 import { IconType } from "react-icons";
+import { BsChat, BsDot, BsHeart, BsTwitter } from "react-icons/bs";
 
 import useCurrentUser from "@/hooks/useCurrentUser";
 import useLoginModal from "@/hooks/useLoginModals";
+import useNotifications from "@/hooks/useNotifications";
 
 interface SidebarItemProps {
     label: string;
@@ -11,6 +13,8 @@ interface SidebarItemProps {
     icon: IconType;
     onClick?: () => void;
     auth?: boolean;
+    alert?: boolean;
+    userId?: string;
 }
 
 const SidebarItem: React.FC<SidebarItemProps> = ({
@@ -18,7 +22,8 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
     href,
     icon: Icon,
     onClick,
-    auth
+    auth,
+    alert
 }) => {
     const loginModal = useLoginModal();
     const { data: currentUser } = useCurrentUser();
@@ -34,6 +39,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
             router.push(href);
         }
     }, [router, onClick, href, currentUser, auth, loginModal]);
+
 
     return (
         <div onClick={handleClick} className="flex flex-row items-center">
@@ -54,6 +60,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
                 "
             >
                 <Icon size={28} color="white" />
+                {alert ? <BsDot className="text-sky-500 absolute -top-4 left-0" size={70} /> : null}
             </div>
             <div className="
                 relative
@@ -71,6 +78,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
                 <p className="hidden lg:block text-white text-xl">
                     {label}
                 </p>
+                {alert ? <BsDot className="text-sky-500 absolute -top-4 left-0" size={70} /> : null}
             </div>
         </div>
     );

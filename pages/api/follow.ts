@@ -8,8 +8,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).end();
     }
 
-
-
     try {
         const { userId } = req.body;
 
@@ -17,6 +15,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (!userId || typeof userId !== 'string') {
             throw new Error("Invalid ID");
+        }
+
+        // get the username of the user who follow you
+        const userToFetch = await prisma.user.findUnique({
+            where: {
+                id: currentUser.id
+            }
+        });
+
+        if (!userToFetch) {
+            throw new Error("Invalid ID");
+
         }
 
         const user = await prisma.user.findUnique({
@@ -33,6 +43,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (req.method === 'POST') {
             updatedFollowingIds.push(userId);
+
+            try {
+                await prisma.notification.create({
+                    data: {
+                        // body: 'Someone followed you!',
+                        body: `${userToFetch.username} followed you!`,
+                        userId,
+                        type: 'follow',
+                        target: userToFetch.id
+                    }
+                });
+
+                await prisma.user.update({
+                    where: {
+                        id: userId
+                    },
+                    data: {
+                        hasNotifications: true
+                    }
+                })
+            } catch (error) {
+                console.log(error);
+            }
         }
 
         if (req.method === 'DELETE') {

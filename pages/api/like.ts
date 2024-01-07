@@ -13,6 +13,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         const { currentUser } = await serverAuth(req, res);
 
+        // get the username of the user who liked the post
+        const user = await prisma.user.findUnique({
+            where: {
+                id: currentUser.id
+            }
+        });
+
+        if (!user) {
+            throw new Error("Invalid user");
+        }
+
+
         if (!postId || typeof postId !== "string") {
             throw new Error("Invalid ID");
         }
@@ -31,6 +43,37 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (req.method === 'POST') {
             updatedLikedIds.push(currentUser.id);
+
+            try {
+                const post = await prisma.post.findUnique({
+                    where: {
+                        id: postId
+                    }
+                });
+
+                if (post?.userId) {
+                    await prisma.notification.create({
+                        data: {
+                            body: `${user.username} has liked your tweet`,
+                            userId: post.userId,
+                            type: 'like',
+                            target: user.id,
+                            postUrl: post.id,
+                        }
+                    });
+
+                    await prisma.user.update({
+                        where: {
+                            id: post.userId
+                        },
+                        data: {
+                            hasNotifications: true
+                        }
+                    })
+                }
+            } catch (error) {
+                console.log(error);
+            }
         }
 
         if (req.method === 'DELETE') {
