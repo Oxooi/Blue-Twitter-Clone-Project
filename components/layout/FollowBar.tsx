@@ -4,8 +4,14 @@ import Button from "../Button";
 import useFollow from "@/hooks/useFollow";
 import useCurrentUser from "@/hooks/useCurrentUser";
 
+interface User {
+    id: string;
+    name: string;
+    username: string;
+}
+
 // Create a composant for the user list elements
-const UserItem = ({ user }) => {
+const UserItem = ({ user }: { user: User }) => {
     const { isFollowing, toggleFollow } = useFollow(user.id);
 
     return (
@@ -40,7 +46,7 @@ const FollowBar = () => {
                 <div className="flex-grow flex-col bg-neutral-800 rounded-xl p-4">
                     <h2 className="text-white text-xl font-semibold">Who to follow</h2>
                     <div className="flex flex-col gap-6 mt-4">
-                        {users.map((user) => {
+                        {users.map((user: User) => {
                             // Dont show the button if the user is not connected
                             if (currentUser.id !== user.id) {
                                 return <UserItem key={user.id} user={user} />;
