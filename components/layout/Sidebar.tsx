@@ -9,6 +9,7 @@ import SideBarLogo from "./SidebarLogo";
 import SidebarItem from "./SidebarItem";
 import SidebarTweetButton from "./SidebarTweetButton";
 import UserLogo from "./UserLogo";
+import { PiBookmarkSimpleFill } from "react-icons/pi";
 
 const Sidebar = () => {
     const { data: currentUser } = useCurrentUser();
@@ -24,6 +25,12 @@ const Sidebar = () => {
             icon: BsBellFill,
             auth: true,
             alert: currentUser?.hasNotifications,
+        },
+        {
+            label: 'Bookmarks',
+            href: '/bookmarks',
+            icon: PiBookmarkSimpleFill,
+            auth: true,
         },
         {
             label: 'Profile',

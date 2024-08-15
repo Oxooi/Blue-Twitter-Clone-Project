@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,60 +7,62 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id               String    @id @default(auto()) @map("_id") @db.ObjectId
-  name             String?
-  username         String?   @unique
-  bio              String?
-  email            String?   @unique
-  emailVerified    DateTime?
-  image            String?
-  coverImage       String?
-  profileImage     String?
-  hashedPassword   String?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  followingIds     String[]  @db.ObjectId
-  hasNotifications Boolean?
-
-  posts         Post[]
-  comments      Comment[]
-  notifications Notification[]
-}
-
-model Post {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  body      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  userId    String   @db.ObjectId
-  likedIds  String[] @db.ObjectId
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  comments Comment[]
+model Bookmarks {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  postId String @db.ObjectId
+  userId String @db.ObjectId
+  post   Post   @relation(fields: [postId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 }
 
 model Comment {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   body      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  userId    String   @db.ObjectId
+  createdAt DateTime @db.Date
   postId    String   @db.ObjectId
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id])
+  updatedAt DateTime @db.Date
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Notification {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   body      String
-  userId    String   @db.ObjectId
-  createdAt DateTime @default(now())
-  type      String
-  target    String
+  createdAt DateTime @db.Date
   postUrl   String?
+  target    String
+  type      String
+  userId    String   @db.ObjectId
+}
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Post {
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  body      String
+  createdAt DateTime    @db.Date
+  likedIds  String[]
+  updatedAt DateTime    @db.Date
+  userId    String      @db.ObjectId
+  user      User        @relation(fields: [userId], references: [id]) // Relation avec User
+  bookmarks Bookmarks[] // Relation one-to-many avec Bookmark
+  comments  Comment[] // Si vous avez un modèle Comment
+}
+
+model User {
+  id               String      @id @default(auto()) @map("_id") @db.ObjectId
+  bio              String?
+  bookmarksIds     String[]
+  coverImage       String?
+  createdAt        DateTime    @db.Date
+  email            String      @unique
+  followingIds     String[]
+  hasNotifications Boolean?
+  hashedPassword   String
+  name             String
+  profileImage     String?
+  updatedAt        DateTime    @db.Date
+  username         String      @unique
+  posts            Post[] // Relation one-to-many avec Post
+  bookmarks        Bookmarks[] // Relation one-to-many avec Bookmark
+  Comment          Comment[]
 }

@@ -8,6 +8,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).end();
   }
 
+  const currentDateTime = new Date().toISOString();
+
   try {
     
     if (req.method === 'POST') {
@@ -17,7 +19,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const post = await prisma.post.create({
         data: {
           body,
-          userId: currentUser.id
+          userId: currentUser.id,
+          createdAt: currentDateTime,
+          updatedAt: currentDateTime
         }
       });
 

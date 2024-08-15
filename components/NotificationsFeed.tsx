@@ -8,11 +8,8 @@ import useNotifications from "@/hooks/useNotifications";
 
 import Avatar from "./Avatar";
 
-interface NotificationsFeedProps {
-    datePosted: string;
-}
 
-const NotificationsFeed: React.FC<NotificationsFeedProps> = ({ datePosted }) => {
+const NotificationsFeed = () => {
     const router = useRouter();
     const { data: currentUser, mutate: mutateCurrentUser } = useCurrentUser();
     const { data: fetchedNotifications = [] } = useNotifications(currentUser?.id);
