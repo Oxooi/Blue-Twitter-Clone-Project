@@ -60,10 +60,12 @@ const Sidebar = () => {
                     )}
                     <SidebarTweetButton />
                 </div>
+                <div className="flex max-h-5">
+                    {currentUser && (
+                        <UserLogo userId={currentUser?.id} />
+                    )}
+                </div>
             </div>
-            {currentUser && (
-                <UserLogo userId={currentUser?.id} />
-            )}
         </div>
     );
 }

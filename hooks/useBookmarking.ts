@@ -1,76 +1,57 @@
-import { useState, useCallback, useEffect, useMemo } from 'react'
-import axios from 'axios'
-import toast from 'react-hot-toast'
-import useSWR from 'swr'
-
-import useCurrentUser from './useCurrentUser'
-
-import fetcher from '@/libs/fetcher'
+import { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
+import useSWR from 'swr';
+import toast from 'react-hot-toast';
+import useCurrentUser from './useCurrentUser';
 
 const useBookmarking = ({
   postId,
-  userId,
 }: {
-  postId?: string
-  userId?: string
+  postId: string;
 }) => {
-  const { data: currentUser } = useCurrentUser()
-  const [hasBooked, setHasBooked] = useState(false)
+  const { data: currentUser } = useCurrentUser();
+  const [hasBooked, setHasBooked] = useState(false);
 
-  const url = userId ? `/api/bookmarks/${userId}` : null;
-  const { data, error, isLoading, mutate } = useSWR(url, fetcher)
+  // Utilisez useSWR pour vérifier l'état de chaque post individuellement
+  const { data, error, isLoading, mutate } = useSWR(
+    currentUser ? `/api/bookmarks/${postId}` : null
+  );
 
   useEffect(() => {
-    const fetchBookmarkStatus = async () => {
-      if (postId && userId) {
-        try {
-          const response = await axios.get(`/api/bookmarks`, {
-            params: { postId, userId },
-          })
-          setHasBooked(response.data.bookmarked)
-        } catch (error) {
-          console.error('Error fetching bookmark status:', error)
-        }
-      }
+    if (data) {
+      setHasBooked(data.bookmarked);
+    } else {
+      setHasBooked(false);
     }
-
-    fetchBookmarkStatus()
-  }, [postId, userId])
+  }, [data]);
 
   const toggleBook = useCallback(async () => {
     if (!currentUser) {
-      toast.error('You need to be logged in to bookmark a post.')
-      return
+      toast.error('You need to be logged in to bookmark a post.');
+      return;
     }
 
     try {
-      let request
-
       if (hasBooked) {
-        request = () =>
-          axios.delete('/api/bookmarks', { data: { postId, userId } })
-        toast.error('Bookmark removed')
+        await axios.delete('/api/bookmarks', { data: { postId, userId: currentUser.id } });
+        toast.error('Bookmark removed');
       } else {
-        request = () => axios.post('/api/bookmarks', { postId, userId })
-        toast.success('Post bookmarked')
+        await axios.post('/api/bookmarks', { postId, userId: currentUser.id });
+        toast.success('Post bookmarked');
       }
-
-      await request()
-      setHasBooked(!hasBooked)
+      mutate(); // Revalider les données après une modification
     } catch (error) {
-      toast.error('Something went wrong while bookmarking.')
-      console.error('Error toggling bookmark:', error)
+      toast.error('Something went wrong while bookmarking.');
+      console.error('Error toggling bookmark:', error);
     }
-  }, [hasBooked, postId, userId, currentUser])
+  }, [hasBooked, postId, currentUser, mutate]);
 
   return {
     hasBooked,
     toggleBook,
-    data,
-    error,
     isLoading,
-    mutate
-  }
-}
+    error,
+  };
+};
 
-export default useBookmarking
+export default useBookmarking;

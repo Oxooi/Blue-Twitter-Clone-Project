@@ -10,9 +10,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const { postId, userId } = req.body;
+    const { currentUser } = await serverAuth(req, res);
 
-    const {currentUser} = await serverAuth(req, res);
+    if (!postId || typeof postId !== 'string') {
+      return res.status(400).json({ error: 'Invalid postId' });
+    }
 
+    if (!userId || typeof userId !== 'string') {
+      return res.status(400).json({ error: 'Invalid userId' });
+    }
+    
     // Get the username of the connected user
     const user = await prisma.user.findUnique({
       where: {
@@ -22,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!user) {
       throw new Error("Invalid user");
-  }
+    }
 
     if (req.method === 'POST') {
       const bookmark = await prisma.bookmarks.create({

@@ -26,7 +26,7 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
 
   const { data: currentUser } = useCurrentUser()
   const { hasLiked, toggleLike } = useLike({ postId: data.id, userId })
-  const { hasBooked, toggleBook } = useBookmarking({ postId: data.id, userId: currentUser?.id });
+  const { hasBooked, toggleBook } = useBookmarking({ postId: data.id});
 
   const goToUser = useCallback(
     (ev: any) => {
@@ -53,21 +53,19 @@ const PostItem: React.FC<PostItemProps> = ({ data = {}, userId }) => {
     },
     [loginModal, currentUser, toggleLike],
   )
-  const LikeIcon = hasLiked ? AiFillHeart : AiOutlineHeart
+  const LikeIcon = hasLiked ? AiOutlineHeart : AiOutlineHeart
   //
 
   // ON Bookmarking
   const onBookmarking = useCallback(
-    async (ev: any) => {
+    async (ev: any) => {      
       ev.stopPropagation()
 
       if (!currentUser) {
         return loginModal.onOpen()
       }
 
-      toggleBook()
-      console.log(currentUser?.id);
-      
+      toggleBook()      
     },
     [loginModal, currentUser, toggleBook],
   )
